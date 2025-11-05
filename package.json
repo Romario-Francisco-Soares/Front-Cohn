@@ -1,7 +1,7 @@
 {
   "name": "nexus-landing-vue",
   "version": "1.0.0",
-  "description": "Modern landing page built with Vue.js 3 and Bootstrap 5",
+  "description": "Landing page moderna com Vue.js 3 e Bootstrap 5",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,7 +10,8 @@
   },
   "dependencies": {
     "vue": "^3.4.0",
-    "bootstrap": "^5.3.0"
+    "bootstrap": "^5.3.0",
+    "bootstrap-icons": "^1.11.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.0",
