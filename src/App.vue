@@ -139,8 +139,6 @@ export default {
         console.log("Resposta:", text);
       })
       .catch(err => console.error("Erro:", err));
-
-      alert('Login enviado! Em produção, isso seria processado pelo backend.');
     };
 
 
