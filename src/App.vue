@@ -117,23 +117,32 @@ export default {
     }
 
     const handleSignIn = (data) => {
-      console.log('Login:', data)
-      // Aqui você pode implementar a lógica de autenticação
+      console.log('Login:', data);
+
+      const payload = {
+        login: data.login,
+        password: data.password,
+        nomeEmpresa: data.nomeEmpresa
+      };
+
       fetch("https://cohn-backend.vercel.app/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-        "Authorization": "Bearer SEU_TOKEN_AQUI",
-        "X-Request-ID": "123e4567-e89b-12d3-a456-426614174000"
-      },
-      body: JSON.stringify(data)
-    })
-    .then(r => r.json())
-    .then(console.log)
-    .catch(console.error);
-      alert('Login enviado! Em produção, isso seria processado pelo backend.')
-    }
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify(payload)
+      })
+      .then(async r => {
+        const text = await r.text();
+        console.log("Status:", r.status);
+        console.log("Resposta:", text);
+      })
+      .catch(err => console.error("Erro:", err));
+
+      alert('Login enviado! Em produção, isso seria processado pelo backend.');
+    };
+
 
     const handleRegister = (data) => {
       console.log('Cadastro:', data)
