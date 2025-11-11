@@ -117,8 +117,6 @@ export default {
     }
 
     const handleSignIn = (data) => {
-      console.log('Login:', data);
-
       const payload = {
         login: data.login,
         password: data.password,
@@ -141,6 +139,26 @@ export default {
       .catch(err => console.error("Erro:", err));
     };
 
+    const includeOptionsNavBar = (option) => {
+        const token = localStorage.getItem("access_token");
+        fetch("https://cohn-backend.vercel.app/products_list", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+          body: JSON.stringify(payload)
+        })
+        .then(async r => {
+          const text = await r.text();
+          localStorage.setItem("options", r.json().access_token);
+        })
+        .catch(err => console.error("Erro:", err));
+        return {
+          value: option.value,
+          label: option.label
+        }
+      }
 
     const handleRegister = (data) => {
       console.log('Cadastro:', data)
