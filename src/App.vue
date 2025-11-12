@@ -136,6 +136,7 @@ export default {
         const text = await r.text();
         console.log("Status:", r.status);
         console.log("Resposta:", text);
+        includeOptionsNavBar();
       })
       .catch(err => console.error("Erro:", err));
     };
@@ -146,7 +147,7 @@ export default {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
+            //"Authorization": `Bearer ${token}`
           }
         });
 
