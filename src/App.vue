@@ -116,29 +116,40 @@ export default {
       modals.value.info = true
     }
 
-    const handleSignIn = (data) => {
+    const handleSignIn = async (data) => {
       const payload = {
         login: data.login,
         password: data.password,
         nomeEmpresa: data.nomeEmpresa
       };
 
-      fetch("https://cohn-backend.vercel.app/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json"
-        },
-        body: JSON.stringify(payload),
-        credentials: "include", // Permite o envio de cookies
-      })
-      .then(async r => {
-        const text = await r.text();
-        console.log("Status:", r.status);
-        console.log("Resposta:", text);
-        includeOptionsNavBar();
-      })
-      .catch(err => console.error("Erro:", err));
+      try {
+        const response = await fetch("https://cohn-backend.vercel.app/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify(payload),
+          //credentials: "include" // Permite envio de cookies
+        });
+
+        if (!response.ok) {
+          throw new Error(`Erro no login: ${response.status}`);
+        }
+
+        const result = await response.json();
+        console.log("Login OK:", result);
+
+        // Se a API retorna token:
+        //const token = result.access_token; // Ajuste conforme resposta real
+
+        // Chama a função passando token
+        await includeOptionsNavBar();
+
+      } catch (err) {
+        console.error("Erro:", err);
+      }
     };
 
     const includeOptionsNavBar = async () => {
@@ -146,30 +157,20 @@ export default {
         const response = await fetch("https://cohn-backend.vercel.app/products_list", {
           method: "GET",
           headers: {
-            "Content-Type": "application/json",
-            //"Authorization": `Bearer ${token}`
-          }
+            "Content-Type": "application/json"
+          },
+          credentials: "include"
         });
 
-        if (!response.ok) {
-          throw new Error(`Erro na requisição: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`Erro: ${response.status}`);
 
         const data = await response.json();
-        console.log("Status:", data);
+        console.log("Opções:", data);
 
-        // Exemplo: salvar no localStorage se necessário
+        // Exemplo: salvar no localStorage
         // localStorage.setItem("options", JSON.stringify(data));
-
-        // Se você quer retornar algo baseado nos dados:
-        //return data.map(option => ({
-        //  value: option.value,
-        //  label: option.label
-        //}));
-
       } catch (err) {
         console.error("Erro:", err);
-        return [];
       }
     };
 
