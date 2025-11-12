@@ -129,7 +129,8 @@ export default {
           "Content-Type": "application/json",
           "Accept": "application/json"
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
+        credentials: "include", // Permite o envio de cookies
       })
       .then(async r => {
         const text = await r.text();
@@ -139,26 +140,37 @@ export default {
       .catch(err => console.error("Erro:", err));
     };
 
-    const includeOptionsNavBar = (option) => {
-        const token = localStorage.getItem("access_token");
-        fetch("https://cohn-backend.vercel.app/products_list", {
-          method: "POST",
+    const includeOptionsNavBar = async () => {
+      try {
+        const response = await fetch("https://cohn-backend.vercel.app/products_list", {
+          method: "GET",
           headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`
-          },
-          body: JSON.stringify(payload)
-        })
-        .then(async r => {
-          const text = await r.text();
-          localStorage.setItem("options", r.json().access_token);
-        })
-        .catch(err => console.error("Erro:", err));
-        return {
-          value: option.value,
-          label: option.label
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error(`Erro na requisição: ${response.status}`);
         }
+
+        const data = await response.json();
+        console.log("Status:", data);
+
+        // Exemplo: salvar no localStorage se necessário
+        // localStorage.setItem("options", JSON.stringify(data));
+
+        // Se você quer retornar algo baseado nos dados:
+        //return data.map(option => ({
+        //  value: option.value,
+        //  label: option.label
+        //}));
+
+      } catch (err) {
+        console.error("Erro:", err);
+        return [];
       }
+    };
 
     const handleRegister = (data) => {
       console.log('Cadastro:', data)
