@@ -31,16 +31,16 @@
           <li class="nav-item" v-if="isLoggedIn">
             <a class="nav-link" href="#systems" @click="closeMenu">Meus Sistemas</a>
           </li>
-          <li class="nav-item" v-if="!isLoggedIn">
+          <li class="nav-item">
             <a class="nav-link" href="#features" @click="closeMenu">Recursos</a>
           </li>
-          <li class="nav-item" v-if="!isLoggedIn">
+          <li class="nav-item">
             <a class="nav-link" href="#product" @click="closeMenu">Produtos</a>
           </li>
-          <li class="nav-item" v-if="!isLoggedIn">
+          <li class="nav-item">
             <a class="nav-link" href="#pricing" @click="closeMenu">Planos</a>
           </li>
-          <li class="nav-item" v-if="!isLoggedIn">
+          <li class="nav-item">
             <a class="nav-link" href="#about" @click="closeMenu">Sobre</a>
           </li>
         </ul>

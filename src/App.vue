@@ -12,20 +12,20 @@
     <SystemsSection v-if="isLoggedIn" :systems="systems" />
 
     <!-- Hero Section -->
-    <HeroSection v-if="!isLoggedIn" />
+    <HeroSection />
 
     <!-- Features Section -->
-    <FeaturesSection v-if="!isLoggedIn" />
+    <FeaturesSection />
 
     <!-- Product Showcase -->
-    <ProductSection v-if="!isLoggedIn" />
+    <ProductSection />
 
     <!-- Pricing Section -->
-    <PricingSection v-if="!isLoggedIn" @open-register="openRegisterModal" />
+    <PricingSection @open-register="openRegisterModal" />
 
     <!-- CTA Section -->
     <CtaSection 
-      v-if="!isLoggedIn"
+    
       @open-register="openRegisterModal"
       @open-contact="openContactModal"
     />
