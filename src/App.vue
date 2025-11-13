@@ -130,49 +130,56 @@ export default {
             "Content-Type": "application/json",
             "Accept": "application/json"
           },
-          body: JSON.stringify(payload),
-          //credentials: "include" // Permite envio de cookies
+          credentials: "include", // 🔥 ESSENCIAL: permite salvar o cookie HttpOnly
+          body: JSON.stringify(payload)
         });
 
+        // ⚠️ Importante: o preflight do POST /login só passa se o backend responder corretamente
+        // (isso está resolvido com o último security.py que te passei)
+
         if (!response.ok) {
-          throw new Error(`Erro no login: ${response.status}`);
+          const errText = await response.text();
+          throw new Error(`Erro no login: ${response.status} - ${errText}`);
         }
 
         const result = await response.json();
-        console.log("Login OK:", result);
+        console.log("✅ Login OK:", result);
 
-        // Se a API retorna token:
-        //const token = result.access_token; // Ajuste conforme resposta real
-
-        // Chama a função passando token
+        // Após login bem-sucedido, o cookie JWT já está armazenado (HttpOnly)
         await includeOptionsNavBar();
 
       } catch (err) {
-        console.error("Erro:", err);
+        console.error("❌ Erro no login:", err);
       }
     };
+
 
     const includeOptionsNavBar = async () => {
       try {
         const response = await fetch("https://cohn-backend.vercel.app/products_list", {
           method: "GET",
           headers: {
-            "Content-Type": "application/json"
+            "Accept": "application/json"
           },
-          credentials: "include"
+          credentials: "include" // 🔥 envia o cookie JWT armazenado
         });
 
-        if (!response.ok) throw new Error(`Erro: ${response.status}`);
+        if (!response.ok) {
+          const errText = await response.text();
+          throw new Error(`Erro: ${response.status} - ${errText}`);
+        }
 
         const data = await response.json();
-        console.log("Opções:", data);
+        console.log("📦 Opções carregadas:", data);
 
-        // Exemplo: salvar no localStorage
+        // Exemplo: salvar localmente se quiser
         // localStorage.setItem("options", JSON.stringify(data));
+
       } catch (err) {
-        console.error("Erro:", err);
+        console.error("❌ Erro ao buscar produtos:", err);
       }
     };
+
 
     const handleRegister = (data) => {
       console.log('Cadastro:', data)
