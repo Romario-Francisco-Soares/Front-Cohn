@@ -28,16 +28,19 @@
 
       <div class="collapse navbar-collapse" :class="{ 'show': isMenuOpen }">
         <ul class="navbar-nav mx-auto mb-2 mb-md-0">
-          <li class="nav-item">
+          <li class="nav-item" v-if="isLoggedIn">
+            <a class="nav-link" href="#systems" @click="closeMenu">Meus Sistemas</a>
+          </li>
+          <li class="nav-item" v-if="!isLoggedIn">
             <a class="nav-link" href="#features" @click="closeMenu">Recursos</a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" v-if="!isLoggedIn">
             <a class="nav-link" href="#product" @click="closeMenu">Produtos</a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" v-if="!isLoggedIn">
             <a class="nav-link" href="#pricing" @click="closeMenu">Planos</a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" v-if="!isLoggedIn">
             <a class="nav-link" href="#about" @click="closeMenu">Sobre</a>
           </li>
         </ul>
@@ -50,7 +53,7 @@
           >
             <i :class="isDarkMode ? 'bi bi-sun-fill' : 'bi bi-moon-fill'"></i>
           </button>
-          <button class="btn btn-gradient" @click="$emit('open-signin')">
+          <button v-if="!isLoggedIn" class="btn btn-gradient" @click="$emit('open-signin')">
             Entrar
             <i class="bi bi-arrow-right ms-2"></i>
           </button>
@@ -68,6 +71,10 @@ export default {
 
   props: {
     isDarkMode: {
+      type: Boolean,
+      default: false
+    },
+    isLoggedIn: {
       type: Boolean,
       default: false
     }

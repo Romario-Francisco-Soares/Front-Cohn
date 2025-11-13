@@ -3,24 +3,29 @@
     <!-- Navigation -->
     <NavigationBar 
       :isDarkMode="isDarkMode"
+      :isLoggedIn="isLoggedIn"
       @toggle-theme="toggleTheme"
       @open-signin="openSignInModal"
     />
 
+    <!-- Systems Section (mostrado após login) -->
+    <SystemsSection v-if="isLoggedIn" :systems="systems" />
+
     <!-- Hero Section -->
-    <HeroSection />
+    <HeroSection v-if="!isLoggedIn" />
 
     <!-- Features Section -->
-    <FeaturesSection />
+    <FeaturesSection v-if="!isLoggedIn" />
 
     <!-- Product Showcase -->
-    <ProductSection />
+    <ProductSection v-if="!isLoggedIn" />
 
     <!-- Pricing Section -->
-    <PricingSection @open-register="openRegisterModal" />
+    <PricingSection v-if="!isLoggedIn" @open-register="openRegisterModal" />
 
     <!-- CTA Section -->
     <CtaSection 
+      v-if="!isLoggedIn"
       @open-register="openRegisterModal"
       @open-contact="openContactModal"
     />
@@ -62,6 +67,7 @@ import FooterSection from './components/FooterSection.vue'
 import SignInModal from './components/SignInModal.vue'
 import RegisterModal from './components/RegisterModal.vue'
 import InfoModal from './components/InfoModal.vue'
+import SystemsSection from './components/SystemsSection.vue'
 
 export default {
   name: 'App',
@@ -76,12 +82,15 @@ export default {
     FooterSection,
     SignInModal,
     RegisterModal,
-    InfoModal
+    InfoModal,
+    SystemsSection
   },
 
   setup() {
     const isDarkMode = ref(false)
-    
+    const isLoggedIn = ref(false)
+    const systems = ref([])
+
     const modals = ref({
       signIn: false,
       register: false,
@@ -130,12 +139,9 @@ export default {
             "Content-Type": "application/json",
             "Accept": "application/json"
           },
-          credentials: "include", // 🔥 ESSENCIAL: permite salvar o cookie HttpOnly
+          credentials: "include",
           body: JSON.stringify(payload)
         });
-
-        // ⚠️ Importante: o preflight do POST /login só passa se o backend responder corretamente
-        // (isso está resolvido com o último security.py que te passei)
 
         if (!response.ok) {
           const errText = await response.text();
@@ -145,14 +151,14 @@ export default {
         const result = await response.json();
         console.log("✅ Login OK:", result);
 
-        // Após login bem-sucedido, o cookie JWT já está armazenado (HttpOnly)
+        isLoggedIn.value = true
+        modals.value.signIn = false
         await includeOptionsNavBar();
 
       } catch (err) {
         console.error("❌ Erro no login:", err);
       }
     };
-
 
     const includeOptionsNavBar = async () => {
       try {
@@ -161,7 +167,7 @@ export default {
           headers: {
             "Accept": "application/json"
           },
-          credentials: "include" // 🔥 envia o cookie JWT armazenado
+          credentials: "include"
         });
 
         if (!response.ok) {
@@ -171,19 +177,15 @@ export default {
 
         const data = await response.json();
         console.log("📦 Opções carregadas:", data);
-
-        // Exemplo: salvar localmente se quiser
-        // localStorage.setItem("options", JSON.stringify(data));
+        systems.value = data
 
       } catch (err) {
         console.error("❌ Erro ao buscar produtos:", err);
       }
     };
 
-
     const handleRegister = (data) => {
       console.log('Cadastro:', data)
-      // Aqui você pode implementar a lógica de registro
       alert('Cadastro enviado! Em produção, os documentos seriam processados pelo backend.')
     }
 
@@ -198,6 +200,8 @@ export default {
 
     return {
       isDarkMode,
+      isLoggedIn,
+      systems,
       modals,
       modalInfo,
       toggleTheme,
