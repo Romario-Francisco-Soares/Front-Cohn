@@ -28,20 +28,20 @@
 
       <div class="collapse navbar-collapse" :class="{ 'show': isMenuOpen }">
         <ul class="navbar-nav mx-auto mb-2 mb-md-0">
-          <li class="nav-item" v-if="isLoggedIn">
-            <a class="nav-link" href="#systems" @click="closeMenu">Meus Sistemas</a>
-          </li>
           <li class="nav-item">
             <a class="nav-link" href="#features" @click="closeMenu">Recursos</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#product" @click="closeMenu">Produtos</a>
+            <a class="nav-link" href="#product" @click="closeMenu">Soluções</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#pricing" @click="closeMenu">Planos</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#about" @click="closeMenu">Sobre</a>
+          <li class="nav-item" v-if="isLoggedIn">
+            <a class="nav-link" href="#systems" @click="closeMenu">Contratadas</a>
+          </li>
           </li>
         </ul>
 

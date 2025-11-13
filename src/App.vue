@@ -1,5 +1,6 @@
 <template>
   <div class="app" :class="{ 'dark-mode': isDarkMode }">
+    
     <!-- Navigation -->
     <NavigationBar 
       :isDarkMode="isDarkMode"
@@ -8,11 +9,11 @@
       @open-signin="openSignInModal"
     />
 
-    <!-- Systems Section (mostrado após login) -->
-    <SystemsSection v-if="isLoggedIn" :systems="systems" />
-
     <!-- Hero Section -->
     <HeroSection />
+
+    <!-- Systems Section (mostrado após login) -->
+    <SystemsSection v-if="isLoggedIn" :systems="systems" @open-system="openSystemSelected" />
 
     <!-- Features Section -->
     <FeaturesSection />
@@ -123,7 +124,39 @@ export default {
     const openInfoModal = (type, title) => {
       modalInfo.value = { type, title }
       modals.value.info = true
-    }
+    };
+
+    const openSystemSelected = async (system) => {
+      const payload= {
+        sistemId: system
+      };
+      try {
+        const response = await fetch("https://cohn-backend.vercel.app/opsystem", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          credentials: "include",
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+          const errText = await response.text();
+          throw new Error(`Erro no login: ${response.status} - ${errText}`);
+        }
+
+        const result = await response.json();
+        console.log("✅ Login OK:", result);
+
+        isLoggedIn.value = true
+        modals.value.signIn = false
+        await includeOptionsNavBar();
+
+      } catch (err) {
+        console.error("❌ Erro no login:", err);
+      }
+    };
 
     const handleSignIn = async (data) => {
       const payload = {

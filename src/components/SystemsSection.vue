@@ -10,7 +10,7 @@
               <h5>{{ system.produto }}</h5>
               <p class="text-muted">{{ system.desc }}</p>
               <p>{{ system.detalhes }}</p>
-              <button class="btn btn-gradient btn-sm w-100">
+              <button class="btn btn-gradient btn-sm w-100" @click="$emit('open-system', system._id)">
                 Acessar
                 <i class="bi bi-arrow-right ms-2"></i>
               </button>
@@ -25,7 +25,7 @@
 <script>
 export default {
   name: 'SystemsSection',
-
+  emits: ['open-system'],
   props: {
     systems: {
       type: Array,
