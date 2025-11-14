@@ -127,36 +127,35 @@ export default {
     };
 
     const openSystemSelected = async (system) => {
-      const payload= {
-        sistemId: system
+      const payload = {
+        systemId: system // Corrigido: estava "sistemId"
       };
+
       try {
-        const response = await fetch("https://cohn-backend.vercel.app/opsystem", {
+        const response = await fetch("https://cohn-backend.vercel.app/product_access", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             "Accept": "application/json"
           },
-          credentials: "include",
+          credentials: "include", // ✅ Necessário para enviar cookies
           body: JSON.stringify(payload)
         });
 
         if (!response.ok) {
           const errText = await response.text();
-          throw new Error(`Erro no login: ${response.status} - ${errText}`);
+          throw new Error(`Erro no acesso: ${response.status} - ${errText}`);
         }
 
-        const result = await response.json();
-        console.log("✅ Login OK:", result);
-
-        isLoggedIn.value = true
-        modals.value.signIn = false
-        await includeOptionsNavBar();
+        // ✅ Captura a URL do redirecionamento
+        const redirectUrl = response.url; // Em 302, isso será a URL final
+        window.location.href = redirectUrl; // ✅ Abre o novo site
 
       } catch (err) {
-        console.error("❌ Erro no login:", err);
+        console.error("❌ Erro no acesso:", err);
       }
     };
+
 
     const handleSignIn = async (data) => {
       const payload = {
